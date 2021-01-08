@@ -38,7 +38,7 @@ const padright = function (str, len) {
 const getUserManifest = function (username) {
     let userdata = JSON.parse(fs.readFileSync(`./contributors/${username}/me.json`).toString());
     userdata.wallpapers.map(function (x, i) {
-        ['uname','name','uri'].map(function (keyname) {
+        ['uname','name','uri','email'].map(function (keyname) {
             userdata.wallpapers[i][keyname] = userdata[keyname];
         });
     });
@@ -189,7 +189,7 @@ const finisherScript = function (manifestObj) {
     // console.log(manifestObj);
     manifestObj.entries.forEach(function (img) {
         // console.log(img);
-        let stdname = `${PACKNAME}.${img.t.toLowerCase().replace(/ /g, '_')}.${img.uname}`;
+        let stdname = `${PACKNAME}.${img.t.toLowerCase().replace(/[\s\.\-]/g, '_').replace(/_+/g, '_')}.${img.uname}`;
         let srcimgpath = `./contributors/${img.uname}/${img.i}.${img.f}`;
         // console.log(stdname);
         // console.log(srcimgpath);
@@ -225,7 +225,7 @@ const finisherScript = function (manifestObj) {
                 <wallpaper delete="false">
                     <name>Campanula</name>
                     <filename>${abspathXml}</filename>
-                    <artist>${img.name} &lt;${img.email}&gt;</artist>
+                    <artist>${img.name}</artist>
                     <options>zoom</options>
                 </wallpaper>
             </wallpapers>`);
@@ -236,8 +236,10 @@ const finisherScript = function (manifestObj) {
 
                 X-KDE-PluginInfo-Name=${img.t}
                 X-KDE-PluginInfo-Author=${img.name}
-                X-KDE-PluginInfo-Email=${img.email}
                 X-KDE-PluginInfo-License=${img.l}
+                ${
+                    img.email ? 'X-KDE-PluginInfo-Email=' + img.email : ''
+                }
             `.trim().replace(/\n\s+/g, '\n'));
 
             // Symlinks
@@ -283,7 +285,7 @@ const finisherScript = function (manifestObj) {
                 <wallpaper delete="false">
                     <name>Campanula</name>
                     <filename>${abspathXml}</filename>
-                    <artist>${img.name} &lt;${img.email}&gt;</artist>
+                    <artist>${img.name}</artist>
                     <options>zoom</options>
                 </wallpaper>
             </wallpapers>`);
@@ -294,8 +296,10 @@ const finisherScript = function (manifestObj) {
 
                 X-KDE-PluginInfo-Name=${img.t}
                 X-KDE-PluginInfo-Author=${img.name}
-                X-KDE-PluginInfo-Email=${img.email}
                 X-KDE-PluginInfo-License=${img.l}
+                ${
+                    img.email === '' ? '' : 'X-KDE-PluginInfo-Email=' + img.email
+                }
             `.trim().replace(/\n\s+/g, '\n'));
 
             // Symlinks
