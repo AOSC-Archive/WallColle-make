@@ -224,7 +224,7 @@ const finisherScript = function (manifestObj) {
             <wallpapers>
                 <wallpaper delete="false">
                     <name>Campanula</name>
-                    <filename>${abspathXml}</filename>
+                    <filename>${abspathImg}</filename>
                     <artist>${img.name}</artist>
                     <options>zoom</options>
                 </wallpaper>
@@ -284,7 +284,7 @@ const finisherScript = function (manifestObj) {
             <wallpapers>
                 <wallpaper delete="false">
                     <name>Campanula</name>
-                    <filename>${abspathXml}</filename>
+                    <filename>${abspathImg}</filename>
                     <artist>${img.name}</artist>
                     <options>zoom</options>
                 </wallpaper>
