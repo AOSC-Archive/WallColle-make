@@ -189,7 +189,7 @@ const finisherScript = function (manifestObj) {
     // console.log(manifestObj);
     manifestObj.entries.forEach(function (img) {
         // console.log(img);
-        let stdname = `${PACKNAME}..${img.uname}..${img.t.replace(/[\s\.\-]/g, '_').replace(/_+/g, '_').replace(/[^A-Za-z0-9\.]/g, '')}`;
+        let stdname = `${PACKNAME}--${img.uname}--${img.t.replace(/[\s\.\-]/g, '_').replace(/_+/g, '_').replace(/[^A-Za-z0-9\.]/g, '')}`;
         let srcimgpath = `./contributors/${img.uname}/${img.i}.${img.f}`;
         // console.log(stdname);
         // console.log(srcimgpath);
