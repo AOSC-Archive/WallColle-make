@@ -223,7 +223,7 @@ const finisherScript = function (manifestObj) {
             <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
             <wallpapers>
                 <wallpaper delete="false">
-                    <name>Campanula</name>
+                    <name>${img.t}</name>
                     <filename>${abspathImg}</filename>
                     <artist>${img.name}</artist>
                     <options>zoom</options>
@@ -283,7 +283,7 @@ const finisherScript = function (manifestObj) {
             <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
             <wallpapers>
                 <wallpaper delete="false">
-                    <name>Campanula</name>
+                    <name>${img.t}</name>
                     <filename>${abspathImg}</filename>
                     <artist>${img.name}</artist>
                     <options>zoom</options>
