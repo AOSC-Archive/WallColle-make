@@ -187,6 +187,29 @@ const finisherScript = function (manifestObj) {
     `.replace(/\s{8}\?/g, `mkdir -p ${DESTDIR}`) );
     console.log(`------------------------------\n\n`);
     // console.log(manifestObj);
+    let albumItemsArr = [];
+    const genAlbumItem = function (img, abspathImg) {
+        return `<wallpaper delete="false">
+            <name>${img.t}</name>
+            <filename>${abspathImg}</filename>
+            <artist>${img.name}</artist>
+            <options>zoom</options>
+        </wallpaper>`;
+    };
+    const writeAlbumXml = function (albumItemsArr) {
+        // Write config
+        let abspathXml = `/usr/share/background-properties/${albumname}.xml`;
+        let mockpathXml = `${DESTDIR}/usr/share/background-properties/${albumname}.xml`;
+        console.log(`Writing XML: ${mockpathXml}`);
+        fs.writeFileSync(mockpathXml, `<?xml version='1.0' encoding='UTF-8'?>
+        <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+        <wallpapers>
+            ${ albumItemsArr.join('\n\n') }
+        </wallpapers>`);
+        fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/gnome-background-properties/${albumname}.xml`);
+        fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/mate-background-properties/${albumname}.xml`);
+    };
+    let albumname = (PACKNAME[0].toUpperCase() + PACKNAME.slice(1).toLowerCase()).replace(/[^A-Za-z0-9]/g, '.');
     manifestObj.entries.forEach(function (img) {
         // console.log(img);
         let stdname = `${PACKNAME}--${img.uname}--${img.t.replace(/[\s\.\-]/g, '_').replace(/_+/g, '_').replace(/[^A-Za-z0-9\.]/g, '')}`;
@@ -195,8 +218,6 @@ const finisherScript = function (manifestObj) {
         // console.log(srcimgpath);
         let abspathImg = `/usr/share/backgrounds/${stdname}/${stdname}.${img.f}`;
         let mockpathImg = `${DESTDIR}/${abspathImg}`;
-        let abspathXml = `/usr/share/background-properties/${stdname}.xml`;
-        let mockpathXml = `${DESTDIR}/usr/share/background-properties/${stdname}.xml`;
         let mockpathMds = `${DESTDIR}/usr/share/wallpapers/${stdname}/metadata.desktop`;
 
         // For RETRO
@@ -217,18 +238,8 @@ const finisherScript = function (manifestObj) {
             console.log(`Copying image: ${srcimgpath}`);
             // fs.copyFileSync(srcimgpath, mockpathImg);
 
-            // Write config
-            console.log(`Writing XML: ${mockpathXml}`);
-            fs.writeFileSync(mockpathXml, `<?xml version='1.0' encoding='UTF-8'?>
-            <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
-            <wallpapers>
-                <wallpaper delete="false">
-                    <name>${img.t}</name>
-                    <filename>${abspathImg}</filename>
-                    <artist>${img.name}</artist>
-                    <options>zoom</options>
-                </wallpaper>
-            </wallpapers>`);
+            // Metadata files
+            albumItemsArr.push(genAlbumItem(img, abspathImg));
             console.log(`Writing metadata.desktop: ${mockpathMds}`);
             fs.writeFileSync(mockpathMds, `
                 [Desktop Entry]
@@ -247,8 +258,6 @@ const finisherScript = function (manifestObj) {
             [ '1-1', '16-10', '16-9', '21-9', '3-2', '4-3', '5-4' ].map(function (x) {
                 fs.symlinkSync(abspathImg, `${DESTDIR}/usr/share/backgrounds/xfce/${stdname}-${x}.${img.f}`);
             });
-            fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/gnome-background-properties/${stdname}.xml`);
-            fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/mate-background-properties/${stdname}.xml`);
 
             allResolutions.forEach(function (scrsize) {
                 let imgSpecificPath = `${DESTDIR}/usr/share/wallpapers/${stdname}/contents/images/${scrsize}.png`;
@@ -277,18 +286,8 @@ const finisherScript = function (manifestObj) {
             console.log(`Copying image: ${srcimgpath}`);
             fs.copyFileSync(srcimgpath, mockpathImg);
 
-            // Write config
-            console.log(`Writing XML: ${mockpathXml}`);
-            fs.writeFileSync(mockpathXml, `<?xml version='1.0' encoding='UTF-8'?>
-            <!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
-            <wallpapers>
-                <wallpaper delete="false">
-                    <name>${img.t}</name>
-                    <filename>${abspathImg}</filename>
-                    <artist>${img.name}</artist>
-                    <options>zoom</options>
-                </wallpaper>
-            </wallpapers>`);
+            // Metadata files
+            albumItemsArr.push(genAlbumItem(img, abspathImg));
             console.log(`Writing metadata.desktop: ${mockpathMds}`);
             fs.writeFileSync(mockpathMds, `
                 [Desktop Entry]
@@ -308,8 +307,6 @@ const finisherScript = function (manifestObj) {
             [ '1-1', '16-10', '16-9', '21-9', '3-2', '4-3', '5-4' ].map(function (x) {
                 fs.symlinkSync(abspathImg, `${DESTDIR}/usr/share/backgrounds/xfce/${stdname}-${x}.${img.f}`);
             });
-            fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/gnome-background-properties/${stdname}.xml`);
-            fs.symlinkSync(abspathXml, `${DESTDIR}/usr/share/mate-background-properties/${stdname}.xml`);
 
             allResolutions.forEach(function (scrsize) {
                 fs.symlinkSync(abspathImg, `${DESTDIR}/usr/share/wallpapers/${stdname}/contents/images/${scrsize}.${img.f}`);
@@ -317,8 +314,8 @@ const finisherScript = function (manifestObj) {
             console.log(`OK.\n`);
         };
 
-
     });
+    writeAlbumXml(albumItemsArr);
 };
 
 // --------------------------------------
