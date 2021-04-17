@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+    <% for wallpaper in &wallpapers { %>
+    <wallpaper delete="false">
+        <name><%= wallpaper.title %></name>
+        <filename><%= wallpaper.dest %></filename>
+        <artist><%= wallpaper.artist %></artist>
+        <options>zoom</options>
+        <license><%= wallpaper.license %></license>
+        <% if !wallpaper.email.is_empty() { %><email><%= wallpaper.email %></email><% } %>
+    </wallpaper>
+    <% } %>
+</wallpapers>

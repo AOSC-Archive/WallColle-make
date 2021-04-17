@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=<%- wallpaper.title %>
+X-KDE-PluginInfo-Name=<%- wallpaper.title %>
+X-KDE-PluginInfo-Author=<%- wallpaper.artist %>
+X-KDE-PluginInfo-License=<%- wallpaper.license %>
+<% if !wallpaper.email.is_empty() { %>X-KDE-PluginInfo-Email=<%- wallpaper.email %><% } %>
