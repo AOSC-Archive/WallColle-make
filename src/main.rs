@@ -401,10 +401,10 @@ fn main() {
     make_dest_dirs(dest_path).unwrap();
 
     info!("Organizing files ...");
-    let pack_file = File::open(dest_path).unwrap();
+    let pack_file = File::open(&args.path).unwrap();
     let mut pack_data = parser::parse_manifest(pack_file).unwrap();
     pack_data.sort_unstable_by(|a, b| a.0.cmp(&b.0));
-    let pack_root = dest_path.parent().unwrap().parent().unwrap();
+    let pack_root = Path::new(&args.path).parent().unwrap().parent().unwrap();
 
     let lookup = group_by_artist(pack_data);
     let all_data = scan_all_artists(&lookup, pack_root, &pack_name).unwrap();
