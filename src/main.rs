@@ -211,16 +211,16 @@ fn process_single_entry(dest: &Path, entry: &WallPaperMeta, retro: bool) -> Resu
     if !retro {
         info!("Copying: {:?} -> {:?}", src_path, dest_path);
         fs::copy(&src_path, dest_path)?;
-    }
 
-    info!("Creating symlinks ...");
-    symlink(
-        &image_path,
-        dest.join(format!(
-            "usr/share/wallpapers/{}/screenshot.{}",
-            entry_name, entry.format
-        )),
-    )?;
+        info!("Creating symlinks ...");
+        symlink(
+            &image_path,
+            dest.join(format!(
+                "usr/share/wallpapers/{}/screenshot.{}",
+                entry_name, entry.format
+            )),
+        )?;
+    }
 
     for ratio in XFCE_RATIOS {
         symlink(
@@ -270,6 +270,17 @@ fn process_retro(src_path: &Path, dest: &Path, entry_name: &str) -> Result<()> {
 
             Ok(())
         })?;
+
+    symlink(
+        format!(
+            "/usr/share/wallpapers/{}/contents/images/1280x960.png",
+            entry_name
+        ),
+        dest.join(format!(
+            "usr/share/wallpapers/{}/screenshot.png",
+            entry_name
+        )),
+    )?;
 
     Ok(())
 }

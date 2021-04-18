@@ -6,7 +6,7 @@ pub fn run_imagemagick(path: &Path, scale: &str) -> Result<Vec<u8>> {
     let output = Command::new("convert")
         .arg(path)
         .args(&[
-            "-gravity", "center", "-quality", "80", "-resize", scale, "PNG:-",
+            "-gravity", "center", "-quality", "80", "-resize", scale, "-colors", "256", "PNG8:-",
         ])
         .stderr(Stdio::inherit())
         .stdin(Stdio::null())
@@ -21,7 +21,7 @@ pub fn run_imagemagick(path: &Path, scale: &str) -> Result<Vec<u8>> {
 }
 
 pub fn optimize_png(data: &[u8]) -> Result<Vec<u8>> {
-    let options = oxipng::Options::from_preset(3);
+    let options = oxipng::Options::from_preset(1);
 
     Ok(oxipng::optimize_from_memory(data, &options)?)
 }
