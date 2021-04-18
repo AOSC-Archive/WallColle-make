@@ -3,10 +3,7 @@
 - Name: <%- name %>
 - Date: <%- date %>
 - Entries: <% wallpapers.len() %>
-- Comments:
-```
-<%- comments %>
-```
+
 
 Title | Contributor | License
 ------|-------------|--------

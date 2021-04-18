@@ -71,7 +71,7 @@ struct WallColle {
     variant: String,
     /// remove the destination directory if it exists
     #[argh(switch)]
-    clean: bool
+    clean: bool,
 }
 
 enum Variant {
