@@ -69,6 +69,9 @@ struct WallColle {
     /// pack variant, possible values are: "normal" or "retro"
     #[argh(option)]
     variant: String,
+    /// remove the destination directory if it exists
+    #[argh(switch)]
+    clean: bool
 }
 
 enum Variant {
@@ -373,30 +376,38 @@ fn main() {
         "retro" => Variant::Retro,
         _ => panic!("Unknown variant '{}'", args.variant),
     };
+    let is_retro = match variant {
+        Variant::Normal => false,
+        Variant::Retro => true,
+    };
+    let dest_path = Path::new(&args.dest);
+    if is_retro && which::which("convert").is_err() {
+        error!("ImageMagic is not installed!");
+        panic!("ImageMagic unavailable!");
+    }
     info!(
         "Building {} variant wallpaper pack from '{}' to '{}'",
         args.variant, args.path, args.dest
     );
+    if args.clean && dest_path.exists() {
+        info!("Purging destination directory...");
+        fs::remove_dir_all(dest_path).unwrap();
+    }
     let pack_name = Path::new(&args.path)
         .file_name()
         .expect("Failed to get pack name")
         .to_string_lossy();
     info!("Creating directories ...");
-    make_dest_dirs(&args.dest).unwrap();
+    make_dest_dirs(dest_path).unwrap();
 
     info!("Organizing files ...");
-    let pack_file = File::open(&args.path).unwrap();
+    let pack_file = File::open(dest_path).unwrap();
     let mut pack_data = parser::parse_manifest(pack_file).unwrap();
     pack_data.sort_unstable_by(|a, b| a.0.cmp(&b.0));
-    let pack_root = Path::new(&args.path).parent().unwrap().parent().unwrap();
+    let pack_root = dest_path.parent().unwrap().parent().unwrap();
 
     let lookup = group_by_artist(pack_data);
-    let is_retro = match variant {
-        Variant::Normal => false,
-        Variant::Retro => true,
-    };
     let all_data = scan_all_artists(&lookup, pack_root, &pack_name).unwrap();
-    let dest_path = Path::new(&args.dest);
 
     all_data
         .par_iter()

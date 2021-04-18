@@ -17,6 +17,7 @@ log = "0.4"
 env_logger = "0.8"
 slug = "0.1"
 oxipng = { version = "4.0", default-features = false }
+which = "4.1"
 
 [profile.release]
 lto = true
